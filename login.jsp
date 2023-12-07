@@ -2,14 +2,6 @@
 <html>
 <head>
 <title>Login Screen</title>
-<style>
-	body {
-		background-color: pink; /* Set the background color to pink */
-	}
-</style>
-<link rel="shortcut icon" href="img/Vigor.jpg" type="image/jpeg">
-<link rel="icon" href="img/Vigor.jpg" type="image/jpeg">
-
 </head>
 <body>
 
@@ -43,5 +35,4 @@ if (session.getAttribute("loginMessage") != null)
 
 </body>
 </html>
-
 

@@ -1,83 +1,84 @@
-<%@ page import="java.net.URLDecoder" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF8"%>
 <%@ include file="jdbc.jsp" %>
 <%@ page import="java.sql.*,java.net.URLEncoder" %>
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Vigor Multivitamin</title>
-    <style>
-        body {
-            background-color: pink;
-        }
-        .custom-button {
-            padding: 10px 20px; 
-            background-color: #0a73e3; 
-            color: #080808; 
-            border: none; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            margin: 10px; 
-        }
-        .custom-button:hover {
-            background-color: #0056b3; 
-        }
-    </style>
-    <link rel="shortcut icon" href="img/Vigor.jpg" type="image/jpeg">
-    <link rel="icon" href="img/Vigor.jpg" type="image/jpeg">
-</head>
-<body>
-<div style="position: absolute; top: 0; right: 0; padding: 10px;">
-    <%
-        String userName = (String) session.getAttribute("authenticatedUser");
-        if (userName != null) {
-            out.println("<h3>Signed in as: " + userName + "</h3>");
-        }
-    %>
-    <a href="index.jsp" style="text-decoration: none;">
-        <button style="margin-right: 5px;">Home</button>
-    </a>
-    <a href="listprod.jsp" style="text-decoration: none;">
-        <button>Product List</button>
-    </a>
-</div>
-
 <%
-String id, name, price;
-id = request.getParameter("id");
-name = URLDecoder.decode(request.getParameter("name"), "UTF-8");
-price = request.getParameter("price");
+String id, name, price,productImageURL;
 
-String imagePath = "img/" + id + ".jpg?" + System.currentTimeMillis();
+id = request.getParameter("id");
+name = request.getParameter("name");
+price = request.getParameter("price");
+productImageURL = request.getParameter("productImageURL");
+
+// Get product name to search for
+// TODO: Retrieve and display info for the product
+// String productId = request.getParameter("id");
+String imgurl = request.getContextPath() + "/" + productImageURL;
+
+
+
 %>
 
-<img src="<%= imagePath %>" alt="Product Logo" height="200" width="200">
+
+<html>
+<head>
+
+    <img src="img/Title.jpg" alt="Photograph of a chocolate cupcake.">
+<title>Brandon and Peter's Grocery</title>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+
+    <img src='<%= imgurl %>'>
+
+    
+
 
 <%
-NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
-String formattedPrice = currencyFormat.format(Double.parseDouble(price));
 
-out.println("<h2>" + name + "</h2>");
+try {
+	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+}
+catch (java.lang.ClassNotFoundException e)
+{
+	out.println("ClassNotFoundException: " +e);
+}
+
+String url = "jdbc:sqlserver://cosc304_sqlserver:1433;DatabaseName=orders;TrustServerCertificate=True";
+String uid = "sa"; 
+String pw = "304#sa#pw";
+
+try (Connection con = DriverManager.getConnection(url, uid, pw)) {
+String sql = "SELECT * FROM review WHERE productId = ?";
+PreparedStatement pstmt = con.prepareStatement(sql);
+pstmt.setString(1, id);
+ResultSet rst1 = pstmt.executeQuery();
+
+
 out.println("<table>");   
-out.println("<tr><th>Id </th><th>Price</th></tr>");
-out.println("<tr><td>" + id + "</td><td>" + formattedPrice + "</td></tr>");
-out.println("</table>");
-out.println("<div class='button-container'>");
-out.println("<form action='listprod.jsp' method='get'>");
-out.println("<button type='submit' class='custom-button'>Continue Shopping</button>");
-out.println("</form>");
-out.println("<form action='addcart.jsp' method='get'>");
-out.println("<input type='hidden' name='id' value='" + URLEncoder.encode(id, "UTF-8") + "'>");
-out.println("<input type='hidden' name='name' value='" + URLEncoder.encode(name, "UTF-8") + "'>");
-out.println("<input type='hidden' name='price' value='" + price + "'>");
-out.println("<button type='submit' class='custom-button'>Add to Cart</button>");
-out.println("</form>");
-out.println("</div>");
+out.println("<h2>" + name + "</h2></tr>");
+out.println("<th>Id </th><th>price</th></tr>");
+out.println("<tr><td>" + id + "</td><td>" + price + "</td><td>" + productImageURL + "</td></tr>");
 
+out.println("<tr><td><a href=\"listprod.jsp\">Continue Shopping </a></td>" + "</td><td><a href='addcart.jsp?id=" + URLEncoder.encode(id, "UTF-8") + "&name=" + URLEncoder.encode(name, "UTF-8") + "&price=" + price + "'>Add to Cart</a></td></tr>");
+int count = 0;
+while(rst1.next() && count < 10){
+    out.println("<tr><td>" + rst1.getString("reviewComment") + "</td></tr>");
+    count++;
+}
+out.println("</table>");
+// TODO: If there is a productImageURL, display using IMG tag
+		
+// TODO: Retrieve any image stored directly in database. Note: Call displayImage.jsp with product id as parameter.
+		
+// TODO: Add links to Add to Cart and Continue Shopping
+} catch (SQLException ex) {
+    out.println("SQLException: " + ex);
+}
 %>
 
 </body>
 </html>
+

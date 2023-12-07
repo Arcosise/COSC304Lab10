@@ -1,64 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Vigor Multivitamin</title>
-    <style>
-        body {
-            background-color: pink;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-        .custom-button {
-            padding: 12px 24px;
-            background-color: #0a73e3;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px;
-            width: 200px;
-        }
-        .custom-button:hover {
-            background-color: #0056b3;
-        }
-        .logo-container {
-            margin-bottom: 20px; 
-        }
-        .button-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-    </style>
-    <link rel="shortcut icon" href="img/Vigor.jpg" type="image/jpeg">
-    <link rel="icon" href="img/Vigor.jpg" type="image/jpeg">
+        <title>Peter and Brandon's Grocery Main Page</title>
 </head>
 <body>
+<h1 align="center">Welcome to Peter and Brandon's Grocery</h1>
 
-<div class="logo-container">
-    <img src="img/Vigor.jpg" alt="Vigor Renewed Logo" height="300" width="300">
-</div>
+<h2 align="center"><a href="login.jsp">Login</a></h2>
 
-<div class="button-container">
-    <button type="button" class="custom-button" onclick="loadContent('login.jsp')">Login</button>
-    <button type="button" class="custom-button" onclick="loadContent('listorder.jsp')">List All Orders</button>
-    <button type="button" class="custom-button" onclick="loadContent('customer.jsp')">Customer Info</button>
-</div>
+<h2 align="center"><a href="listprod.jsp">Begin Shopping</a></h2>
 
-<form action="listprod.jsp" method="get">
-    <button type="submit" class="custom-button">Begin Shopping</button>
-</form>
-<form action="admin.jsp" method="get">
-    <button type="submit" class="custom-button">Administrators</button>
-</form>
-<form action="logout.jsp" method="get">
-    <button type="submit" class="custom-button">Log out</button>
-</form>
+<h2 align="center"><a href="listorder.jsp">List All Orders</a></h2>
+
+<h2 align="center"><a href="customer.jsp">Customer Info</a></h2>
+
+<h2 align="center"><a href="admin.jsp">Administrators</a></h2>
+
+<h2 align="center"><a href="logout.jsp">Log out</a></h2>
 
 <%
 	String userName = (String) session.getAttribute("authenticatedUser");
@@ -66,20 +24,11 @@
 		out.println("<h3 align=\"center\">Signed in as: "+userName+"</h3>");
 %>
 
-<div id="dynamicContent">
-</div>
-<script>
-    function loadContent(url) {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("dynamicContent").innerHTML = this.responseText;
-            }
-        };
-        xhr.open("GET", url, true);
-        xhr.send();
-    }
-</script>
+<h4 align="center"><a href="ship.jsp?orderId=1">Test Ship orderId=1</a></h4>
+
+<h4 align="center"><a href="ship.jsp?orderId=3">Test Ship orderId=3</a></h4>
 
 </body>
-</html>
+</head>
+
+

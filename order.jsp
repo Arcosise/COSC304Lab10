@@ -1,32 +1,15 @@
-<%@ page import="java.sql.*" %>
+<%@ page import="java.sql.*,java.net.URLEncoder" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.Iterator" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Map" %>
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF8"%>
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Vigor Multivitamin</title>
-	<style>
-        body {
-            background-color: pink; 
-        }
-
-		button {
-		background-color: #0a73e3; 
-		color: white; 
-		padding: 10px 20px; 
-		border: none; 
-		border-radius: 5px; 
-		cursor: pointer; 
-		font-size: 16px;
-		}
-		
-    </style>
-    <link rel="shortcut icon" href="img/Vigor.jpg" type="image/jpeg">
-    <link rel="icon" href="img/Vigor.jpg" type="image/jpeg">
+<title>Brandon & Peter - Grocery Order Processing</title>
 </head>
 <body>
 
@@ -103,8 +86,19 @@ try (Connection con = DriverManager.getConnection(url, uid, pw)) {
 						pstmt1.executeUpdate();
 				
 						String productName = (String) product.get(1);
-						
-						out.println("<tr><td>" + productId + "</td><td>" + productName + "</td><td>" + quantity + "</td><td>" + price + "</td><td>" + subTotal + "</td></tr>");
+
+						String q5 = "SELECT * FROM review WHERE customerId = ? AND productId = ?";
+						PreparedStatement pstmt4 = con.prepareStatement(q5);
+						pstmt4.setString(1,custId);
+						pstmt4.setInt(2,Integer.parseInt(productId));
+						ResultSet rst5 = pstmt4.executeQuery();
+
+						if(!rst5.next()){
+							out.println("<tr><td>" + productId + "</td><td>" + productName + "</td><td>" + quantity + "</td><td>" + price + "</td><td>" + subTotal + "</td><td><a href='viewPurchasedProd.jsp?prodId=" + URLEncoder.encode(productId, "UTF-8") + "&custId=" + URLEncoder.encode(custId, "UTF-8") + "'>Review Item</a></td></tr>");
+						} else {
+							out.println("<tr><td>" + productId + "</td><td>" + productName + "</td><td>" + quantity + "</td><td>" + price + "</td><td>" + subTotal + "</td></tr>");
+						}
+
 				
 					}	
 					
@@ -137,9 +131,6 @@ try (Connection con = DriverManager.getConnection(url, uid, pw)) {
 					out.println("<h2>Order Completed. Will be shipped soon....</h2>");
 					out.println("<h2>You order reference number is: " + orderId + "</h2>");
 					out.println("<h2>Shipping to Customer: " + custId + " Name: " + fn + " " + ln + "</h2>");
-
-					
-
 					loopIsRunning = false;
 				}
 	
@@ -151,15 +142,15 @@ try (Connection con = DriverManager.getConnection(url, uid, pw)) {
 		}
 
 	}
+
+
 } catch (SQLException ex) {
     out.println("SQLException: " + ex);
 }
 // remove the contents of the shopping cart
 session.removeAttribute("productList");
-%>
-<form action="index.jsp" method="get">
-    <button type="submit">Return to Main Page</button>
-</form>
 
+
+%>
 </BODY>
 </HTML>

@@ -4,19 +4,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title> Order List</title>
-<style>
-    body {
-        background-color: pink; /* Set the background color to pink */
-    }
-</style>
-<link rel="shortcut icon" href="img/Vigor.jpg" type="image/jpeg">
-<link rel="icon" href="img/Vigor.jpg" type="image/jpeg">
-
+<title>Grocery Order List</title>
 </head>
 <body>
 
-<h1> Order List</h1>
+<h1> Grocery Order List</h1>
 
 <%
 try {
